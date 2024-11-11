@@ -180,7 +180,7 @@ const SendVerifyEmail = async (req, res, next) => {
         if (!user) {
             return res.status(400).send({ success: false, message: 'user not found' });
         }
-        const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
+        const activationCode = Math.floor(100000 + Math.random() * 900000).toString();
         const code = new Verification({
             email: email,
             code: activationCode
@@ -282,14 +282,14 @@ const ResetPassword = async (req, res, next) => {
 
 // get user profile
 const GetProfile = async (req, res, next) => {
-    const { email } = req.user;
+    const { role ,_id} = req.user;
     try {
-        const result = await User.findOne({ email: email })
+        const result = await AuthModel.findById(_id)
         if (!result) {
             return res.status(400).send({ success: false, message: "user doesn't exist" });
         }
-        if (!result?.verified) {
-            return res.status(400).send({ success: false, message: "please verify your email" });
+        if (result && result?.block) {
+            return res.status(403).send({ success: false, data: user, message: "You have been blocked by admin please contact admin for unblock you" });
         }
         res.status(200).send({ success: true, data: result });
     } catch (error) {
@@ -301,7 +301,7 @@ const DeleteAccount = async (req, res, next) => {
     try {
         const { email } = req.user;
         const { password } = req.body
-        const user = await User.findOne({ email: email })
+        const user = await AuthModel.findOne({ email: email })
         if (user) {
             const result = await bcrypt.compare(password, user?.password);
             if (result) {
@@ -327,7 +327,6 @@ const AdminGetAllUser = async (req, res, next) => {
         if (req.user?.role !== "ADMIN") {
             return res.status(403).send({ success: false, message: 'you are unauthorized ' })
         }
-        console.log('admin')
         const { search, ...queryKeys } = req.query;
         const searchKey = {}
         if (search) searchKey.name = search
