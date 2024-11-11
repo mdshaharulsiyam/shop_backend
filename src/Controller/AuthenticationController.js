@@ -17,9 +17,9 @@ const SignUp = async (req, res, next) => {
         if (confirm_password !== password) {
             return res.status(201).send({ success: false, message: "confirm password doesn't match" });
         }
-        const existingUser = await AuthModel.findOne({email:user?.email})
+        const existingUser = await AuthModel.findOne({ email: user?.email })
         if (existingUser?._id) {
-            return res.status(203).send({success:false,message:'user already exist with this email'})
+            return res.status(203).send({ success: false, message: 'user already exist with this email' })
         }
         const newUser = new AuthModel({ ...user, password });
         if (newUser?._doc?._id) {
@@ -49,15 +49,15 @@ const SignUp = async (req, res, next) => {
     }
 
 }
-const ActiveAccount = async(req, res, next)=>{
-try {
-    const {name,email,phone,password} = req.user;
-    const user = new AuthModel({name,email,phone,password})
-    await user.save()
-    res.send({success:true,message:'account activated successfully please login with your credentials',data:user?._doc})
-} catch (error) {
-    globalErrorHandler(error, req, res, next, 'user')
-}
+const ActiveAccount = async (req, res, next) => {
+    try {
+        const { name, email, phone, password } = req.user;
+        const user = new AuthModel({ name, email, phone, password })
+        await user.save()
+        res.send({ success: true, message: 'account activated successfully please login with your credentials', data: user?._doc })
+    } catch (error) {
+        globalErrorHandler(error, req, res, next, 'user')
+    }
 }
 // login 
 const SignIn = async (req, res, next) => {
@@ -104,14 +104,14 @@ const UpdateUser = async (req, res, next) => {
         }
         const { access, role, email, password, ...data } = req.body;
         if (req.file) {
-          const uploadResult = await uploadToCloudinary(req.file);
-          data.img = uploadResult.url;
+            const uploadResult = await uploadToCloudinary(req.file);
+            data.img = uploadResult.url;
         }
         const result = await AuthModel.updateOne({ _id: id }, {
             $set: {
                 ...data,
             }
-        },  { new: true })
+        }, { new: true })
         if (req?.file && user?.img) {
             deleteFileByUrl(user?.img);
         }
@@ -282,7 +282,7 @@ const ResetPassword = async (req, res, next) => {
 
 // get user profile
 const GetProfile = async (req, res, next) => {
-    const { role ,_id} = req.user;
+    const { role, _id } = req.user;
     try {
         const result = await AuthModel.findById(_id)
         if (!result) {
@@ -324,7 +324,7 @@ const DeleteAccount = async (req, res, next) => {
 }
 const AdminGetAllUser = async (req, res, next) => {
     try {
-        if (req.user?.role !== "ADMIN") {
+        if (req.user?.access < 2) {
             return res.status(403).send({ success: false, message: 'you are unauthorized ' })
         }
         const { search, ...queryKeys } = req.query;
@@ -332,6 +332,18 @@ const AdminGetAllUser = async (req, res, next) => {
         if (search) searchKey.name = search
         const result = await Queries(User, queryKeys, searchKey)
         return res.status(200).send({ message: 'User retrieve Successfully', ...result })
+    } catch (error) {
+        globalErrorHandler(error, req, res, next, 'user')
+    }
+}
+const AdminBlockUser = async (req, res, next) => {
+    try {
+        if (req.user?.access < 2) {
+            return res.status(403).send({ success: false, message: 'you are unauthorized ' })
+        }
+        const { id } = req.params
+        const result = await AuthModel.findByIdAndUpdate(id, { block: true })
+        return res.status(200).send({ message: 'User retrieve Successfully', data: result })
     } catch (error) {
         globalErrorHandler(error, req, res, next, 'user')
     }
@@ -347,5 +359,6 @@ module.exports = {
     GetProfile,
     DeleteAccount,
     AdminGetAllUser,
-    ActiveAccount
+    ActiveAccount,
+    AdminBlockUser
 }

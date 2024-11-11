@@ -3,8 +3,8 @@ const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN_SECRET } = require("../../config/defaults");
 const AuthModel = require("../../Models/authModel");
 
-const verifyToken = async(req, res, next) => {
-  const tokenWithBearer  = req.headers.authorization;
+const verifyToken = async (req, res, next) => {
+  const tokenWithBearer = req.headers.authorization;
   if (!tokenWithBearer) {
     return res.status(403).send({ success: false, message: "Forbidden access" });
   }
@@ -13,12 +13,15 @@ const verifyToken = async(req, res, next) => {
       .status(401)
       .send({ success: false, message: "unauthorized access" });
   }
-  const token = tokenWithBearer.split(" ")[1]; 
-  jwt.verify(token, ACCESS_TOKEN_SECRET,async (err, decoded) => {
+  const token = tokenWithBearer.split(" ")[1];
+  jwt.verify(token, ACCESS_TOKEN_SECRET, async (err, decoded) => {
     if (err) {
       return res.status(401).send({ success: false, message: "unauthorized access" });
     }
     const user = await AuthModel.findById(decoded?.id)
+    if (user?.block) {
+      return res.status(401).send({ success: false, message: "Your are blocked by admin" });
+    }
     req.user = user;
     next();
   });

@@ -1,5 +1,5 @@
 
-const { SignUp, SignIn, UpdateUser, ChangePassword, SendVerifyEmail, VerifyCode, ResetPassword, GetProfile, DeleteAccount, AdminGetAllUser, ActiveAccount, } = require('../Controller/AuthenticationController');
+const { SignUp, SignIn, UpdateUser, ChangePassword, SendVerifyEmail, VerifyCode, ResetPassword, GetProfile, DeleteAccount, AdminGetAllUser, ActiveAccount, AdminBlockUser, } = require('../Controller/AuthenticationController');
 const { upload } = require('../middlewares/FileUpload/CloudnaryFileUpload');
 const ActivationToken = require('../middlewares/Token/ActivationToken');
 const verifyToken = require('../middlewares/Token/verifyToken');
@@ -15,7 +15,8 @@ AuthRoute.post('/sign-up', SignUp)
     .patch('/change-password', verifyToken, ChangePassword)
     .get('/profile', verifyToken, GetProfile)
     .delete('/delete-account', verifyToken, DeleteAccount)
-    .get('/admin-get-all-user', verifyToken,AdminGetAllUser)
+    .get('/admin-get-all-user', verifyToken, AdminGetAllUser)
+    .patch('/admin-block-user:/id', verifyToken, AdminBlockUser)
 
 module.exports = AuthRoute
 
