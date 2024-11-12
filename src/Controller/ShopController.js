@@ -104,4 +104,10 @@ const BlockShop = async (req, res, next) => {
     }
 };
 
-module.exports = { CreateShopRequest, GetAllShops, UpdateShop, DeleteShop };
+module.exports = {
+    CreateShopRequest,
+    GetAllShops,
+    UpdateShop,
+    DeleteShop,
+    BlockShop
+};
