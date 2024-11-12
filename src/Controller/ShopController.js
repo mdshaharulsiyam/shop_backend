@@ -82,4 +82,26 @@ const DeleteShop = async (req, res, next) => {
         globalErrorHandler(error, req, res, next, 'Shop');
     }
 };
+const BlockShop = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { _id, access } = req.user;
+        if (access < 2) {
+            return res.status(403).send({ message: 'unauthorize access', success: false })
+        }
+        const shop = await ShopModel.findById(id);
+        if (shop && shop.logo) {
+            deleteFileByUrl(shop.logo);
+        }
+        await ShopModel.findByIdAndUpdate(id, {
+            $set: {
+                block: true
+            }
+        });
+        res.status(200).send({ success: true, message: 'Shop blocked successfully' });
+    } catch (error) {
+        globalErrorHandler(error, req, res, next, 'Shop');
+    }
+};
+
 module.exports = { CreateShopRequest, GetAllShops, UpdateShop, DeleteShop };
