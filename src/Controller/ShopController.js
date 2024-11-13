@@ -45,7 +45,7 @@ const UpdateShop = async (req, res, next) => {
         const { id } = req.params;
         const { _id, access } = req.user;
         const userShop = await ShopModel.findOne({ user: _id })
-        if (userShop?._id.toString() !== id || access < 2) {
+        if (userShop?._id.toString() !== id || access < 3) {
             return res.status(403).send({ message: 'unauthorize access', success: false })
         }
         let data = req.body;
@@ -69,7 +69,7 @@ const DeleteShop = async (req, res, next) => {
         const { id } = req.params;
         const { _id, access } = req.user;
         const userShop = await ShopModel.findOne({ user: _id })
-        if (userShop?._id.toString() !== id || access < 2) {
+        if (userShop?._id.toString() !== id || access < 3) {
             return res.status(403).send({ message: 'unauthorize access', success: false })
         }
         const shop = await ShopModel.findById(id);
@@ -86,7 +86,7 @@ const BlockShop = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { _id, access } = req.user;
-        if (access < 2) {
+        if (access < 3) {
             return res.status(403).send({ message: 'unauthorize access', success: false })
         }
         const shop = await ShopModel.findById(id);

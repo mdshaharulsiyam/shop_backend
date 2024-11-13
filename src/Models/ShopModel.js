@@ -29,7 +29,13 @@ const ShopSchema = new Schema({
         },
         coordinates: {
             type: [Number],
-            required: [true, 'shop coordinate is required']
+            required: [true, 'shop coordinate is required'],
+            validate: {
+                validator: function (value) {
+                    return value.length === 2;
+                },
+                message: 'Coordinates must contain exactly two values: [longitude, latitude]'
+            }
         }
     },
     block: {
@@ -47,7 +53,12 @@ const ShopSchema = new Schema({
     tradeLicense: {
         type: String,
         default: null
+    },
+    shopType: {
+        type: String,
+        default: 'shop'
     }
+
 })
 ShopSchema.index({ location: "2dsphere" });
 const ShopModel = model('shop', ShopSchema);

@@ -24,7 +24,7 @@ const AuthSchema = new Schema({
     "provider": {
         type: String,
         required: true,
-        enum:['credential','google'],
+        enum: ['credential', 'google'],
         default: 'credential'
     },
     "block": {
@@ -42,13 +42,13 @@ const AuthSchema = new Schema({
     "role": {
         type: String,
         required: true,
-        enum: ['USER','VENDOR', 'ADMIN','SUPER_ADMIN'],
+        enum: ['USER', 'VENDOR', 'RIDER', 'ADMIN', 'SUPER_ADMIN'],
         default: 'USER'
     },
     "access": {
         type: Number,
         required: true,
-        enum: [0,1,2,3],
+        enum: [0, 1, 2, 3, 4],
         default: 0,
     },
     phone: {

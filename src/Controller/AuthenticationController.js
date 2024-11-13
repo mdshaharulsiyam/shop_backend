@@ -324,7 +324,7 @@ const DeleteAccount = async (req, res, next) => {
 }
 const AdminGetAllUser = async (req, res, next) => {
     try {
-        if (req.user?.access < 2) {
+        if (req.user?.access < 3) {
             return res.status(403).send({ success: false, message: 'you are unauthorized ' })
         }
         const { search, ...queryKeys } = req.query;
@@ -338,7 +338,7 @@ const AdminGetAllUser = async (req, res, next) => {
 }
 const AdminBlockUser = async (req, res, next) => {
     try {
-        if (req.user?.access < 2) {
+        if (req.user?.access < 3) {
             return res.status(403).send({ success: false, message: 'you are unauthorized ' })
         }
         const { id } = req.params
