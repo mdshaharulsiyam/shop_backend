@@ -9,9 +9,9 @@ const StripeAccountSchema = new Schema({
         type: String,
         required: [true, 'Email is required']
     },
-    doctorId: {
+    user: {
         type: Schema.Types.ObjectId,
-        ref: 'Doctor',
+        ref: 'user',
         required: [true, 'user Id is required'],
     },
     stripeAccountId: {

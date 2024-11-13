@@ -40,5 +40,5 @@ CartSchema.pre('save', function (next) {
     this.totalPrice = this.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
     next();
 });
-const Cart = mongoose.model('cart', CartSchema);
-module.exports = Cart;
+const CartModel = mongoose.model('cart', CartSchema);
+module.exports = CartModel;
