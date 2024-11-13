@@ -54,16 +54,15 @@ const OrderSchema = new Schema({
         default: 'pending'
     },
     deliveryAddress: {
-        street: { type: String, required: true },
-        city: { type: String, required: true },
-        state: { type: String, required: true },
-        zipCode: { type: String, required: true },
-        country: { type: String, required: true }
+        type: Schema.Types.ObjectId,
+        ref: 'shippingAddress',
+        required: [true, 'Shipping Address is required']
     },
     assignedRider: {
         type: Schema.Types.ObjectId,
-        ref: 'Rider',
-        required: false
+        ref: 'user',
+        required: false,
+        default: null
     },
     estimatedDeliveryDate: {
         type: Date,

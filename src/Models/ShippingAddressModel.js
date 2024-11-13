@@ -33,5 +33,5 @@ const ShippingAddressSchema = new Schema({
 
 ShippingAddressSchema.index({ location: '2dsphere' });
 
-const ShippingAddressModel = model('ShippingAddress', ShippingAddressSchema);
+const ShippingAddressModel = model('shippingAddress', ShippingAddressSchema);
 module.exports = ShippingAddressModel

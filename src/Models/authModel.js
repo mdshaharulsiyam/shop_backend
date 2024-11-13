@@ -56,6 +56,10 @@ const AuthSchema = new Schema({
         required: false,
         default: null
     },
+    canceledOrder:{
+        type:Number,
+        default:0
+    } 
 }, { timestamps: true });
 
 AuthSchema.pre('save', async function (next) {
