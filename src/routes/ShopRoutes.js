@@ -6,6 +6,6 @@ ShopRoutes.post('/create-request', CreateShopRequest)
     .get('/all-shop', GetAllShops)
     .put('/update/:id', verifyToken, UpdateShop)
     .delete('/delete/:id', verifyToken, DeleteShop)
-    .patch('/block/:id', verifyToken, BlockShop);
+    .patch('/block/:id', verifyToken(['admin', 'super admin']), BlockShop);
 
 module.exports = ShopRoutes
