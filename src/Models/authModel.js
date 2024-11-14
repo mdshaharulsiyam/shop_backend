@@ -45,12 +45,6 @@ const AuthSchema = new Schema({
         enum: ['USER', 'VENDOR', 'RIDER', 'ADMIN', 'SUPER_ADMIN'],
         default: 'USER'
     },
-    "access": {
-        type: Number,
-        required: true,
-        enum: [0, 1, 2, 3, 4],
-        default: 0,
-    },
     phone: {
         type: Number,
         required: false,
